@@ -6,10 +6,11 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
-import DiscordProvider from "next-auth/providers/discord";
-
+import GoogleProvider from "next-auth/providers/google";
 import { env } from "~/env";
 import { db } from "~/server/db";
+
+import type { Role } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -21,15 +22,9 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      role: Role;
     };
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -39,16 +34,50 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    async signIn({ account, profile }) {
+      if (account) {
+        if (account.type === "oauth") {
+          if (profile) {
+            const user = await db.user.findUnique({
+              where: {
+                email: profile.email,
+              },
+            });
+
+            if (user) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    },
+
+    async session({ session, user }) {
+      const userFromDb = await db.user.findUnique({
+        where: {
+          email: user.email,
+        },
+      });
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+          role: userFromDb?.role,
+        },
+      }
+    },
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
+    GoogleProvider({
+      name: "google",
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }
+    ),
     /**
      * ...add more providers here.
      *
