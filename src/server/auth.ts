@@ -27,12 +27,23 @@ declare module "next-auth" {
   }
 }
 
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    email: string;
+    role: Role;
+  }
+}
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
     async signIn({ account, profile }) {
       if (account) {
@@ -53,21 +64,35 @@ export const authOptions: NextAuthOptions = {
       return false;
     },
 
-    async session({ session, user }) {
-      const userFromDb = await db.user.findUnique({
-        where: {
-          email: user.email,
-        },
-      });
+    async jwt({ token, user }) {
+      try {
+        const fetchUser = await db.user.findUnique({
+          where: {
+            email: user.email as string,
+          },
+        });
+        if (fetchUser) {
+          token.id = fetchUser.id;
+          token.email = fetchUser.email as string;
+          token.role = fetchUser.role;
+        }
+      } catch (e) { }
+      return token;
+    },
 
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: user.id,
-          role: userFromDb?.role,
-        },
+    async session({ session, token }) {
+      if (token) {
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            id: token.id,
+            email: token.email,
+            role: token.role,
+          },
+        }
       }
+      return session
     },
   },
   adapter: PrismaAdapter(db) as Adapter,

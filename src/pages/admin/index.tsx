@@ -11,12 +11,6 @@ export default function MainAdmin() {
         <p className="text-center">Welcome, {sessionData?.user?.email}</p>
         <span className="text-center">Session Data:</span>
         <pre>{JSON.stringify(sessionData, null, 2)}</pre>
-        <button
-          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-          type="submit"
-        >
-          Sign Out
-        </button>
 
       </form>
     </div >
