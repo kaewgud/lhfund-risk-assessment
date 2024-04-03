@@ -11,7 +11,6 @@ export default function MainAdmin() {
         <p className="text-center">Welcome, {sessionData?.user?.email}</p>
         <span className="text-center">Session Data:</span>
         <pre>{JSON.stringify(sessionData, null, 2)}</pre>
-
       </form>
     </div >
   );
