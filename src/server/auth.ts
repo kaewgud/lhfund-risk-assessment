@@ -49,15 +49,12 @@ export const authOptions: NextAuthOptions = {
       if (account) {
         if (account.type === "oauth") {
           if (profile) {
-            const user = await db.user.findUnique({
-              where: {
-                email: profile.email,
-              },
-            });
-
-            if (user) {
-              return true;
-            }
+            // const user = await db.user.findUnique({
+            //   where: {
+            //     email: profile.email,
+            //   },
+            // });
+            return true;
           }
         }
       }
