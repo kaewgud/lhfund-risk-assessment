@@ -1,15 +1,19 @@
-// tailwind.config.js
-const {nextui} = require("@nextui-org/react");
+import { type Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
+import { nextui } from '@nextui-org/theme'
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    // ...
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-  ],
+export default {
+  content: ["./src/**/*.tsx",
+  './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+      },
+    },
   },
-  darkMode: "class",
   plugins: [nextui()],
-};
+} satisfies Config;

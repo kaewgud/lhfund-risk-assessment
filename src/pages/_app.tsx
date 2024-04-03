@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { Inter } from "next/font/google";
 import { NextUIProvider } from "../../lib/next-ui/next-ui-provider";
+import Navbar from "~/components/Navbar"
 
 import { api } from "~/utils/api";
 
@@ -19,11 +20,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-        <NextUIProvider>
           <main className={`font-sans ${inter.variable}`}>
-            <Component {...pageProps} />
+          <NextUIProvider>
+              <Navbar/>
+              <Component {...pageProps} />
+          </NextUIProvider>
           </main>
-        </NextUIProvider>
     </SessionProvider>
   );
 };
