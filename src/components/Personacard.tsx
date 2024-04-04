@@ -56,7 +56,7 @@ export default function Personacard({ score }:{score: number}) {
         </div>
         {detail}
         <div className="flex justify-center mt-6 mb-5 ">
-          <Button color="primary" size="lg" className="text-xl"> แผนการลงทุนที่เหมาะสมกับคุณ </Button>
+          <Button radius="md" color="primary" variant="shadow" size="lg"> แผนการลงทุนที่เหมาะสมกับคุณ </Button>
         </div>
         
 

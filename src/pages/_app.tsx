@@ -20,7 +20,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <html>
       <SessionProvider session={session}>
       <main className={`${noto.className} lhfund`}>
           <NextUIProvider>
@@ -29,8 +28,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </NextUIProvider>
           </main>
     </SessionProvider>
-    </html>
-      
   );
 };
 
