@@ -1,9 +1,8 @@
-'use client'
-
 import * as React from 'react';
 import {Progress} from "@nextui-org/react";
 import {Pagination, Button} from "@nextui-org/react";
-import {RadioGroup, Radio, useRadio, VisuallyHidden, cn} from "@nextui-org/react";
+import {RadioGroup, useRadio, VisuallyHidden, cn} from "@nextui-org/react";
+
 
 export const CustomRadio = ({ value, children }: { value: string; children: React.ReactNode; }) => {
     const {
@@ -32,7 +31,7 @@ export const CustomRadio = ({ value, children }: { value: string; children: Reac
           <input {...getInputProps()} />
         </VisuallyHidden>
         <div {...getLabelWrapperProps()}>
-          {<span {...getLabelProps()}>{children}</span> && children}
+          {children && <span {...getLabelProps()}>{children}</span>}
         </div>
       </Component>
     );
@@ -61,9 +60,12 @@ export default function Question() {
             </div>
             <div className='w-3/4 flex flex-col place-items-center drop-shadow-xl bg-white'>
                 <div className='px-16 w-full'>
-                    <h1 className='text-xl py-6 font-bold'>{currentPage}. ปัจจุบันท่านมีภาระทางการเงินและค่าใช้จ่ายประจำ เช่น ค่าผ่อนบ้าน รถ 
-ค่าใช้จ่ายส่วนตัวและค่าเลี้ยงดูครอบครัวเป็นสัดส่วนเท่าใด</h1>
-                    <p className="text-small text-[#1CA59B]">ข้อที่ {currentPage} จาก 10 ข้อ</p>
+                    <div>
+                        <h1 className='text-xl py-6 font-bold'>{currentPage}. ปัจจุบันท่านมีภาระทางการเงินและค่าใช้จ่ายประจำ เช่น ค่าผ่อนบ้าน รถ ค่าใช้จ่ายส่วนตัวและค่าเลี้ยงดูครอบครัวเป็นสัดส่วนเท่าใด</h1>
+                    </div>
+                    <div>
+                        <p className="text-small text-[#1CA59B]">ข้อที่ {currentPage} จาก 10 ข้อ</p>
+                    </div>
                     <div className='py-5'>
                         <RadioGroup className=''>
                             <CustomRadio value="1">
