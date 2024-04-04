@@ -92,10 +92,19 @@ model Answer {
 }
 
 model MutualFund {
-  id          String  @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
   description String?
+  monthlyPrices MonthlyPrice[]
   funds       Fund[]
+}
+
+model MonthlyPrice {
+  id        String   @id @default(cuid())
+  dateTimestamp     DateTime
+  cost      Float
+  fund      MutualFund @relation(fields: [fundId], references: [id])
+  fundId    String
 }
 
 model Fund {
