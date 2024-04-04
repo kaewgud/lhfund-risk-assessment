@@ -91,7 +91,7 @@ model Answer {
   assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 }
 
-model FundType {
+model MutualFund {
   id          String  @id @default(cuid())
   name        String
   description String?
@@ -99,10 +99,28 @@ model FundType {
 }
 
 model Fund {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   name        String
   description String?
-  riskLevel   Int
   fundTypeId  String
-  fundType    FundType @relation(fields: [fundTypeId], references: [id])
+  mutualFund  MutualFund @relation(fields: [fundTypeId], references: [id])
+  Ratio       Ratio[]
+}
+
+model RiskLevel {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  level       Int
+  ratios      Ratio[]
+}
+
+model Ratio {
+  id          String    @id @default(cuid())
+  name        String
+  riskLevel   RiskLevel @relation(fields: [riskLevelId], references: [id])
+  riskLevelId String
+  percentage  Int
+  fundId      String
+  fund        Fund      @relation(fields: [fundId], references: [id])
 }

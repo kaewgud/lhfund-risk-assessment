@@ -13,6 +13,17 @@ export const assessmentRouter = createTRPCRouter({
     return questions;
   }),
 
+  getQuestionById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const question = await ctx.db.question.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      return question;
+    }),
+
   getAllChoice: publicProcedure.query(async ({ ctx }) => {
     const choices = await ctx.db.choice.findMany();
     return choices;
