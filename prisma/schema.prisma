@@ -94,19 +94,21 @@ model Answer {
 }
 
 model MutualFund {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
+  id            String         @id @default(cuid())
+  name          String
+  description   String?
   monthlyPrices MonthlyPrice[]
-  funds       Fund[]
+  funds         Fund[]
+  riskLevelId   String
+  riskLevel     RiskLevel      @relation(fields: [riskLevelId], references: [id])
 }
 
 model MonthlyPrice {
-  id        String   @id @default(cuid())
-  dateTimestamp     DateTime
-  cost      Float
-  fund      MutualFund @relation(fields: [fundId], references: [id])
-  fundId    String
+  id            String     @id @default(cuid())
+  dateTimestamp DateTime
+  cost          Float
+  mutualFund    MutualFund @relation(fields: [mutualFundId], references: [id])
+  mutualFundId  String
 }
 
 model Fund {
@@ -125,6 +127,7 @@ model RiskLevel {
   level       Int
   ratios      Ratio[]
   Assessment  Assessment[]
+  MutualFund  MutualFund[]
 }
 
 model Ratio {
