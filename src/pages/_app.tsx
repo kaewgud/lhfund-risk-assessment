@@ -20,9 +20,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <html className="lhfund">
+    <html>
       <SessionProvider session={session}>
-          <main className={noto.className}>
+      <main className={`${noto.className} lhfund`}>
           <NextUIProvider>
               <Navbar/>
               <Component {...pageProps} />
