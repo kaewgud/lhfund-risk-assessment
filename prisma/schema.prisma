@@ -62,10 +62,12 @@ model VerificationToken {
 }
 
 model Assessment {
-  id      String   @id @default(cuid())
-  userId  String?
-  answers Answer[]
-  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  userId      String?
+  answers     Answer[]
+  riskLevelId String
+  riskLevel   RiskLevel @relation(fields: [riskLevelId], references: [id])
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Question {
@@ -117,11 +119,12 @@ model Fund {
 }
 
 model RiskLevel {
-  id          String  @id @default(cuid())
+  id          String       @id @default(cuid())
   name        String
   description String?
   level       Int
   ratios      Ratio[]
+  Assessment  Assessment[]
 }
 
 model Ratio {
