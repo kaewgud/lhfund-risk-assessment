@@ -15,5 +15,21 @@ export default {
       },
     },
   },
-  plugins: [nextui()],
+  plugins: [
+    nextui({
+      themes: {
+        "lhfund": {
+          colors: {
+            background : "#FFFFFF",
+            secondary: "#48BFA5",
+            primary: {
+              50 :"#FFFFFF",
+              100:"#000000",
+              DEFAULT: "#1CA59B",
+            },
+          },
+        }
+      }
+    })
+  ],
 } satisfies Config;
