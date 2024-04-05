@@ -17,9 +17,9 @@ export const portfolioRouter = createTRPCRouter({
     return ratios;
   }),
 
-  getAllFund: publicProcedure.query(async ({ ctx }) => {
-    const funds = await ctx.db.fund.findMany({});
-    return funds;
+  getAllFundType: publicProcedure.query(async ({ ctx }) => {
+    const fundTypes = await ctx.db.fundType.findMany({});
+    return fundTypes;
   }),
 
   getAllMutualFund: publicProcedure.query(async ({ ctx }) => {
@@ -32,44 +32,32 @@ export const portfolioRouter = createTRPCRouter({
     return monthlyPrices;
   }),
 
-  getAllRatioByRiskLevel: publicProcedure
-    .input(z.object({ riskLevel: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const riskLevel = await ctx.db.riskLevel.findFirst({
+  updateMutualFundRatio: adminOnlyProcedure
+    .input(z.object({
+      mutualFundId: z.string(),
+      percentage: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const ratio = await ctx.db.ratio.findFirst({
         where: {
-          level: input.riskLevel,
+          mutualFundId: input.mutualFundId,
         },
       });
 
-      if (!riskLevel) {
-        throw new Error("Risk Level not found");
+      if (!ratio) {
+        throw new Error("Ratio not found");
       }
 
-      const ratios = await ctx.db.ratio.findMany({
+      return ctx.db.ratio.update({
         where: {
-          riskLevelId: riskLevel.id,
+          id: ratio.id,
+        },
+        data: {
+          percentage: input.percentage as number,
         },
       });
-
-      return ratios;
     }),
-
-  getAllFundByRatio: publicProcedure
-    .input(z.object({ ratioId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const fund = await ctx.db.fund.findMany({
-        where: {
-          Ratio: {
-            some: {
-              id: input.ratioId,
-            },
-          },
-        },
-      });
-
-      return fund;
-    }),
-
+    
   getAllMutualFundByRiskLevel: publicProcedure
     .input(z.object({ riskLevel: z.number() }))
     .query(async ({ ctx, input }) => {
@@ -85,26 +73,139 @@ export const portfolioRouter = createTRPCRouter({
 
       const mutualFunds = await ctx.db.mutualFund.findMany({
         where: {
-          riskLevelId: riskLevel.id,
+          Ratio: {
+            some: {
+              riskLevelId: riskLevel.id,
+            },
+          },
         },
       });
 
       return mutualFunds;
     }),
 
-  getAllMonthlyPriceByMutualFund: publicProcedure
-    .input(z.object({ mutualFundId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const monthlyPrices = await ctx.db.monthlyPrice.findMany({
+  getAllRatioGroupByFundTypeInRiskLevel: publicProcedure
+  .input(z.object({ riskLevel: z.number() }))
+  .query(async ({ ctx, input }) => {
+    const riskLevel = await ctx.db.riskLevel.findFirst({
+      where: {
+        level: input.riskLevel,
+      },
+    });
+
+    if (!riskLevel) {
+      throw new Error("Risk Level not found");
+    }
+
+    const ratios = await ctx.db.ratio.findMany({
+      select: {
+        id: true,
+        percentage: true,
+      },
+      where: {
+        riskLevelId: riskLevel.id,
+      },
+    });
+
+    const fundTypes = await ctx.db.fundType.groupBy({
+      by: ["name"],
+      _count: {
+        id: true,
+      },
+    });
+
+    return fundTypes.map((fundType) => {
+      return {
+        name: fundType.name,
+        count: fundType._count.id,
+        sum_percentage: ratios.reduce((acc, ratio) => {
+          return acc + ratio.percentage;
+        }, 0),
+      };
+    });    
+  }),
+
+  createMutualFundRatio: adminOnlyProcedure
+    .input(z.object({
+      riskLevel: z.number(),
+      mutualFundId: z.string(),
+      percentage: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+
+      const riskLevel = await ctx.db.riskLevel.findFirst({
         where: {
-          mutualFundId: input.mutualFundId,
+          level: input.riskLevel,
         },
       });
 
-      return monthlyPrices;
+      if (!riskLevel) {
+        throw new Error("Risk Level not found");
+      }
+
+      const mutualFund = await ctx.db.mutualFund.findUnique({
+        where: {
+          id: input.mutualFundId as string,
+        },
+      });
+
+      if (!mutualFund) {
+        throw new Error("mutualFund not found");
+      }
+
+      return ctx.db.ratio.create({
+        data: {
+          name: mutualFund.name as string,
+          riskLevelId: riskLevel.id as string,
+          mutualFundId: input.mutualFundId as string,
+          percentage: input.percentage as number,
+        },
+      });
     }),
 
-  getAllRiskLevelInAssessmentGroupByRiskLevelName: publicProcedure
+  getAllMutualFundByFundType: publicProcedure
+    .input(z.object({ fundTypeId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const mutualFunds = await ctx.db.mutualFund.findMany({
+        where: {
+          fundTypeId: input.fundTypeId,
+        },
+      });
+
+      return mutualFunds;
+    }),
+
+  getAllFundTypeByRiskLevel: publicProcedure
+    .input(z.object({ riskLevel: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const riskLevel = await ctx.db.riskLevel.findFirst({
+        where: {
+          level: input.riskLevel,
+        },
+      });
+
+      if (!riskLevel) {
+        throw new Error("Risk Level not found");
+      }
+
+      const fundTypes = await ctx.db.fundType.findMany({
+        where: {
+          mutualFunds: {
+            some: {
+              Ratio: {
+                some: {
+                  riskLevelId: riskLevel.id,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return fundTypes;
+    }),
+
+    getAllRiskLevelGroupByRiskLevelNameInAssessment: publicProcedure
     .query(async ({ ctx }) => {
       const riskLevelGroup = await ctx.db.assessment.groupBy(
         {
@@ -131,61 +232,53 @@ export const portfolioRouter = createTRPCRouter({
         };
       });
     }),
+  
+  getAllMonthlyPriceByMutualFundInFundType: publicProcedure
+    .input(z.object({ 
+      mutualFundId: z.string(),
+      fundTypeId: z.string(),
+     }))
+    .query(async ({ ctx, input }) => {
+      const monthlyPrices = await ctx.db.monthlyPrice.findMany({
+        where: {
+          mutualFundId: input.mutualFundId,
+          mutualFund: {
+            fundTypeId: input.fundTypeId,
+          }
+        },
+      });
 
+      return monthlyPrices;
+    }),
 
-  createRatio: adminOnlyProcedure
+  updateRepresentMap: adminOnlyProcedure
     .input(z.object({
-      riskLevel: z.number(),
-      fundId: z.string(),
-      percentage: z.number(),
+      fundTypeId: z.string(),
+      mutualFundId: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-
-      const riskLevel = await ctx.db.riskLevel.findFirst({
+      const representMap = await ctx.db.representMap.findUnique({
         where: {
-          level: input.riskLevel,
+          id: input.fundTypeId,
         },
       });
 
-      if (!riskLevel) {
-        throw new Error("Risk Level not found");
+      if (!representMap) {
+        throw new Error("MutualFund not found");
       }
 
-      const fund = await ctx.db.fund.findUnique({
+      return ctx.db.representMap.update({
         where: {
-          id: input.fundId,
+          id: input.fundTypeId,
         },
-      });
-
-      if (!fund) {
-        throw new Error("Fund not found");
-      }
-
-      return ctx.db.ratio.create({
         data: {
-          name: fund.name as string,
-          riskLevelId: riskLevel.id as string,
-          fundId: input.fundId as string,
-          percentage: input.percentage as number,
+          mutualFundId: input.mutualFundId as string,
         },
       });
     }),
 
-  updateRatio: adminOnlyProcedure
-    .input(z.object({
-      id: z.string(),
-      percentage: z.number(),
-    }))
-    .mutation(async ({ ctx, input }) => {
+  // Todo: fix
 
-      return ctx.db.ratio.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          percentage: input.percentage as number,
-        },
-      });
-    }),
+
 })
 
