@@ -11,7 +11,7 @@ export default function Selectport() {
   );
 
   return (
-    <Dropdown>
+    <Dropdown className="shadow-2xl mt-1">
       <DropdownTrigger>
         <Button 
           variant="faded"

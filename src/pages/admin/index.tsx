@@ -1,5 +1,7 @@
 import { useSession } from "next-auth/react";
 import Selectport from "~/components/Selectport";
+import Showchart from "~/components/Showchart";
+import Piechart from "~/components/Showchart";
 
 export default function MainAdmin() {
   const { data: sessionData } = useSession();
@@ -16,10 +18,11 @@ export default function MainAdmin() {
       </form>
       */}
       <div className="flex flex-row w-full h-full gap-5">
-        <div className="bg-primary-200 w-1/3 rounded-xl ">
+        <div className="bg-primary-200 w-2/3 rounded-xl ">
             <div className="mt-8 ml-5">
-              <p className="text-primary-300 mb-3" >Adjust Port Ratio</p>
+              <p className="text-primary-300 mb-3 text-base font-semibold" >Adjust Port Ratio</p>
               <Selectport/>
+              <Showchart/> 
             </div>
           </div>
 
