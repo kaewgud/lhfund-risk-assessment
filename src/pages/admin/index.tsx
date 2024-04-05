@@ -3,6 +3,7 @@ import Selectport from "~/components/Selectport";
 import Showchart from "~/components/Showchart";
 import Managefund from "~/components/Managefund";
 import Rank from "~/components/Rank";
+import Simulation from "~/components/Simulation";
 
 export default function MainAdmin() {
   const { data: sessionData } = useSession();
@@ -34,7 +35,7 @@ export default function MainAdmin() {
             <div className="bg-white w-4/12 rounded-xl"><Rank level="lv (5)" percent="12" user="89"/> </div>
           </div>
           <div className="bg-primary-200 h-2/4 rounded-xl">
-
+              <Simulation/>
           </div>
           <div className="flex flex-row h-1/2 gap-5">
             <div className="bg-white w-full rounded-xl">wad</div>
