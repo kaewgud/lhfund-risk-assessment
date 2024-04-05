@@ -93,14 +93,12 @@ model Answer {
   assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 }
 
-model MutualFund {
-  id            String         @id @default(cuid())
-  name          String
-  description   String?
-  monthlyPrices MonthlyPrice[]
-  funds         Fund[]
-  riskLevelId   String
-  riskLevel     RiskLevel      @relation(fields: [riskLevelId], references: [id])
+model FundType {
+  id           String         @id @default(cuid())
+  name         String
+  description  String?
+  mutualFunds  MutualFund[]
+  RepresentMap RepresentMap[]
 }
 
 model MonthlyPrice {
@@ -111,13 +109,15 @@ model MonthlyPrice {
   mutualFundId  String
 }
 
-model Fund {
-  id          String     @id @default(cuid())
-  name        String
-  description String?
-  fundTypeId  String
-  mutualFund  MutualFund @relation(fields: [fundTypeId], references: [id])
-  Ratio       Ratio[]
+model MutualFund {
+  id           String         @id @default(cuid())
+  name         String
+  description  String?
+  fundTypeId   String
+  fundType     FundType       @relation(fields: [fundTypeId], references: [id])
+  Ratio        Ratio[]
+  MonthlyPrice MonthlyPrice[]
+  RepresentMap RepresentMap[]
 }
 
 model RiskLevel {
@@ -127,15 +127,22 @@ model RiskLevel {
   level       Int
   ratios      Ratio[]
   Assessment  Assessment[]
-  MutualFund  MutualFund[]
 }
 
 model Ratio {
-  id          String    @id @default(cuid())
-  name        String
-  riskLevel   RiskLevel @relation(fields: [riskLevelId], references: [id])
-  riskLevelId String
-  percentage  Int
-  fundId      String
-  fund        Fund      @relation(fields: [fundId], references: [id])
+  id           String     @id @default(cuid())
+  name         String
+  riskLevel    RiskLevel  @relation(fields: [riskLevelId], references: [id])
+  riskLevelId  String
+  percentage   Int
+  mutualFundId String
+  mutualFund   MutualFund @relation(fields: [mutualFundId], references: [id])
+}
+
+model RepresentMap {
+  id           String     @id @default(cuid())
+  fundTypeId   String
+  fundType     FundType   @relation(fields: [fundTypeId], references: [id])
+  mutualFundId String
+  mutualFund   MutualFund @relation(fields: [mutualFundId], references: [id])
 }
