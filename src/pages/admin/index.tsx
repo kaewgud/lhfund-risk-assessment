@@ -1,4 +1,5 @@
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
+import Selectport from "~/components/Selectport";
 
 export default function MainAdmin() {
   const { data: sessionData } = useSession();
@@ -15,7 +16,13 @@ export default function MainAdmin() {
       </form>
       */}
       <div className="flex flex-row w-full h-full gap-5">
-        <div className="bg-primary-200 w-1/3 rounded-xl">hell</div>
+        <div className="bg-primary-200 w-1/3 rounded-xl ">
+            <div className="mt-8 ml-5">
+              <p className="text-primary-300 mb-3" >Adjust Port Ratio</p>
+              <Selectport/>
+            </div>
+          </div>
+
         <div className="flex flex-col w-full gap-5">
           <div className="flex flex-row gap-5 h-1/6">
             <div className="bg-white w-4/12 rounded-xl">awd</div>
