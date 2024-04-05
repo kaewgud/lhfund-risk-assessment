@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import Selectport from "~/components/Selectport";
 import Showchart from "~/components/Showchart";
-import Piechart from "~/components/Showchart";
 
 export default function MainAdmin() {
   const { data: sessionData } = useSession();

@@ -11,9 +11,7 @@ export default function Showchart(){
             <p className="lowercasr text-xs text-primary-300 mb-5"> Secondary text </p>
             <Divider/>
             <div className="mt-5"> <Piechart/> </div>
-            
-            
-            
+     
             </CardBody>
         </Card>
     )
