@@ -4,6 +4,7 @@ import Showchart from "~/components/Showchart";
 import Managefund from "~/components/Managefund";
 import Rank from "~/components/Rank";
 import Simulation from "~/components/Simulation";
+import Risklevel from "~/components/Risklevel";
 
 export default function MainAdmin() {
   const { data: sessionData } = useSession();
@@ -38,7 +39,9 @@ export default function MainAdmin() {
               <Simulation/>
           </div>
           <div className="flex flex-row h-1/2 gap-5">
-            <div className="bg-white w-full rounded-xl">wad</div>
+            <div className="bg-white w-full rounded-xl">
+              <Risklevel/>
+            </div>
 
           </div>
         </div>
