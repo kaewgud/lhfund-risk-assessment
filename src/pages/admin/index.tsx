@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react"
 import Selectport from "~/components/Selectport";
 import Showchart from "~/components/Showchart";
 import Managefund from "~/components/Managefund";
+import Rank from "~/components/Rank";
 
 export default function MainAdmin() {
   const { data: sessionData } = useSession();
@@ -28,16 +29,16 @@ export default function MainAdmin() {
             </div>
         <div className="flex flex-col w-full gap-5">
           <div className="flex flex-row gap-5 h-1/6">
-            <div className="bg-white w-4/12 rounded-xl">awd</div>
-            <div className="bg-white w-4/12 rounded-xl">awd</div>
-            <div className="bg-white w-4/12 rounded-xl">awd</div>
+            <div className="bg-white w-4/12 rounded-xl"> <Rank level="lv (3)" percent="66" user="1,255"/></div>
+            <div className="bg-white w-4/12 rounded-xl"><Rank level="lv (1)" percent="32" user="155"/> </div>
+            <div className="bg-white w-4/12 rounded-xl"><Rank level="lv (5)" percent="12" user="89"/> </div>
           </div>
           <div className="bg-primary-200 h-2/4 rounded-xl">
 
           </div>
           <div className="flex flex-row h-1/2 gap-5">
-            <div className="bg-white w-1/3 rounded-xl">wad</div>
-            <div className="bg-white w-full rounded-xl">awd</div>
+            <div className="bg-white w-full rounded-xl">wad</div>
+
           </div>
         </div>
       </div>
