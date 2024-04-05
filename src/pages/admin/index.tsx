@@ -15,14 +15,14 @@ export default function MainAdmin() {
       </form>
       */}
       <div className="flex flex-row w-full h-full gap-5">
-        <div className="bg-[#D9D9D9] w-1/3 rounded-xl">hell</div>
+        <div className="bg-primary-200 w-1/3 rounded-xl">hell</div>
         <div className="flex flex-col w-full gap-5">
           <div className="flex flex-row gap-5 h-1/6">
             <div className="bg-white w-4/12 rounded-xl">awd</div>
             <div className="bg-white w-4/12 rounded-xl">awd</div>
             <div className="bg-white w-4/12 rounded-xl">awd</div>
           </div>
-          <div className="bg-[#D9D9D9] h-2/4 rounded-xl">
+          <div className="bg-primary-200 h-2/4 rounded-xl">
 
           </div>
           <div className="flex flex-row h-1/2 gap-5">
