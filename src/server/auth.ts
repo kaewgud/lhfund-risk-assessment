@@ -6,10 +6,11 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
-import DiscordProvider from "next-auth/providers/discord";
-
+import GoogleProvider from "next-auth/providers/google";
 import { env } from "~/env";
 import { db } from "~/server/db";
+
+import type { Role } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -21,15 +22,17 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      role: Role;
     };
   }
+}
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    email: string;
+    role: Role;
+  }
 }
 
 /**
@@ -38,21 +41,65 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    async signIn({ account, profile }) {
+      if (account) {
+        if (account.type === "oauth") {
+          if (profile) {
+            // const user = await db.user.findUnique({
+            //   where: {
+            //     email: profile.email,
+            //   },
+            // });
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+
+    async jwt({ token, user }) {
+      try {
+        const fetchUser = await db.user.findUnique({
+          where: {
+            email: user.email as string,
+          },
+        });
+        if (fetchUser) {
+          token.id = fetchUser.id;
+          token.email = fetchUser.email as string;
+          token.role = fetchUser.role;
+        }
+      } catch (e) { }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (token) {
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            id: token.id,
+            email: token.email,
+            role: token.role,
+          },
+        }
+      }
+      return session
+    },
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
+    GoogleProvider({
+      name: "google",
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }
+    ),
     /**
      * ...add more providers here.
      *
