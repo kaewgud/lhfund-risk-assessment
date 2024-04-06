@@ -1,3 +1,5 @@
+"use client";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react"
 import Selectport from "~/components/Selectport";
 import Showchart from "~/components/Showchart";
@@ -5,8 +7,18 @@ import Managefund from "~/components/Managefund";
 import Rank from "~/components/Rank";
 import Simulation from "~/components/Simulation";
 import Risklevel from "~/components/Risklevel";
+import {Autocomplete, AutocompleteItem} from "@nextui-org/react";
+import { levels } from "~/data-mockup/level";
 
 export default function MainAdmin() {
+  const [showInput, setShowInput] = React.useState(true);//status box
+  const [count, setCount] = React.useState(0);
+  const handleSelectionChange = (key: any) => {
+
+    setShowInput(true)
+    setCount(0)
+};
+
   const { data: sessionData } = useSession();
   return (
     <div className="flex h-screen items-center justify-center bg-neutral-100 p-6 px-20" >
@@ -21,10 +33,20 @@ export default function MainAdmin() {
       </form>
       */}
       <div className="flex flex-row w-full h-full gap-5">
-        <div className="bg-primary-200 w-3/3 rounded-xl ">
+        <div className="bg-primary-200 w-2/3 rounded-xl ">
               <div className="mt-8 ml-5">
                 <p className="text-primary-300 mb-3 text-base font-semibold" >Adjust Port Ratio</p>
-                <Selectport/>
+                <Autocomplete
+
+                            placeholder="เลือกระดับความเสี่ยง"
+                            defaultItems={levels}
+                            labelPlacement="outside"
+                            className="max-w-xs"
+                            onSelectionChange={handleSelectionChange}
+
+                        >
+                            {(item: { id: any; name: any; }) => <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>}
+                        </Autocomplete>
                 <Showchart/> 
                 <Managefund/>
               </div>
