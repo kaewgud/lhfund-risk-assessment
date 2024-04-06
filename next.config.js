@@ -7,6 +7,7 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  transpilePackages: ['@mui/x-charts'],
 
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.
@@ -16,6 +17,7 @@ const config = {
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
+    
   },
 };
 
