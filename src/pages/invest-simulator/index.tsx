@@ -1,3 +1,4 @@
+
 "use client";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { DataLine } from "~/components/DataLine";
@@ -9,10 +10,6 @@ import { enUS, tr } from 'date-fns/locale';
 import { risks } from "~/data-mockup/risk"
 import { a1 } from "~/data-mockup/simulate"
 import { Line } from "react-chartjs-2";
-
-import { useRouter } from 'next/router';
-
-import { api } from '~/utils/api'
 
 ChartJS.register(
   TimeScale,
@@ -47,7 +44,6 @@ const q: string[] = ['2024-02-01 00:00:00', '2024-01-01 00:00:00', '2023-12-01 0
 
 
 export default function Simulate() {
-  const router = useRouter();
   const [box, setBox] = React.useState<React.JSX.Element>(<></>);
   const totalDuration = 3000;
   const delayBetweenPoints = 50;
@@ -73,7 +69,7 @@ export default function Simulate() {
     Change: number;
     Date: string;
   }>();//ข้อมูลจุดที่กราฟหยุด
-    const [status,SetStatus]=React.useState(false)
+  const [status, SetStatus] = React.useState(false)
   const [showInput, setShowInput] = React.useState(true);//status box
   const [minX, setMinX] = React.useState<string>('2023-10-01 00:00:00');//min graph
   const [indexDash, setIndexDash] = React.useState(1000)
@@ -84,19 +80,19 @@ export default function Simulate() {
     setCount(0)
   };
 
-    const onInputChange = () => {
-        if (Number(value) > 0 || value !== "") {
-            setValue(value)
-            setNowP(p1)
-            setStartP(7.013)
-            setShowInput(false)
-        }
+  const onInputChange = () => {
+    if (Number(value) > 0 || value !== "") {
+      setValue(value)
+      setNowP(p1)
+      setStartP(7.013)
+      setShowInput(false)
+    }
 
-    };
-    const onBuy = () => {
-        setIndexDash(a1.length * (count - 1) / 4)
-        setDataTest(a1)
-        SetStatus(true)
+  };
+  const onBuy = () => {
+    setIndexDash(a1.length * (count - 1) / 4)
+    setDataTest(a1)
+    SetStatus(true)
 
     // setMinX('2023-12-01 00:00:00')
   }
@@ -111,64 +107,61 @@ export default function Simulate() {
   }
 
 
-  const { data: mutualFunds } = api.portfolio.getAllMutualFund.useQuery();
-
-  const { data: fundTypes } = api.portfolio.getAllFundType.useQuery();
 
   return (
 
-        <div className="w-full min-h-screen justify-center flex ">
-            <div className='w-fit h-fit  flex flex-col place-items-center drop-shadow-xl bg-white mt-20'>
-                <div className='w-full bg-primary h-[50px] rounded-t-xl flex justify-center flex-col place-content-start px-5' >
-                    <div>
-                        <p className=" text-2xl text-white ">จำลองการลงทุน</p>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-5 lg:flex-row h-full w-full px-5 place-items-center justify-center">
-                    <div className=" w-[500px] ">
-                        <Line data={DataLine(dataTest, indexDash)} options={{
-                            animations: {
-                                x: {
-                                    type: 'number',
-                                    easing: 'linear',
-                                    duration: delayBetweenPoints,
-                                    from: NaN,
-                                    delay(ctx: any) {
-                                        if (ctx.type !== 'data' || ctx.xStarted) {
-                                            return 0;
-                                        }
-                                        ctx.xStarted = true;
-                                        return ctx.index * delayBetweenPoints;
-                                    }
-                                },
-                                y: {
-                                    type: 'number',
-                                    easing: 'linear',
-                                    duration: delayBetweenPoints,
-                                    from: previousY,
-                                    delay(ctx: any) {
-                                        if (ctx.type !== 'data' || ctx.yStarted) {
-                                            return 0;
-                                        }
-                                        ctx.yStarted = true;
-                                        return ctx.index * delayBetweenPoints;
-                                    }
-                                }
-                            },
-                            interaction: {
-                                intersect: false
-                            },
-                            responsive: true,
-                            scales: {
-                                x: {
-                                    // min:1471174953000,
-                                    // max:'2024-04-01 00:00:00',
-                                    min: minX,
-                                    reverse: true,
-                                    type: 'time',
-                                    time: {
-                                        unit: 'month',
-                                    },
+    <div className="w-full min-h-screen justify-center flex ">
+      <div className='w-fit h-fit  flex flex-col place-items-center drop-shadow-xl bg-white mt-20'>
+        <div className='w-full bg-primary h-[50px] rounded-t-xl flex justify-center flex-col place-content-start px-5' >
+          <div>
+            <p className=" text-2xl text-white ">จำลองการลงทุน</p>
+          </div>
+        </div>
+        <div className="flex flex-col gap-5 lg:flex-row h-full w-full px-5 place-items-center justify-center">
+          <div className=" w-[500px] ">
+            <Line data={DataLine(dataTest, indexDash)} options={{
+              animations: {
+                x: {
+                  type: 'number',
+                  easing: 'linear',
+                  duration: delayBetweenPoints,
+                  from: NaN,
+                  delay(ctx: any) {
+                    if (ctx.type !== 'data' || ctx.xStarted) {
+                      return 0;
+                    }
+                    ctx.xStarted = true;
+                    return ctx.index * delayBetweenPoints;
+                  }
+                },
+                y: {
+                  type: 'number',
+                  easing: 'linear',
+                  duration: delayBetweenPoints,
+                  from: previousY,
+                  delay(ctx: any) {
+                    if (ctx.type !== 'data' || ctx.yStarted) {
+                      return 0;
+                    }
+                    ctx.yStarted = true;
+                    return ctx.index * delayBetweenPoints;
+                  }
+                }
+              },
+              interaction: {
+                intersect: false
+              },
+              responsive: true,
+              scales: {
+                x: {
+                  // min:1471174953000,
+                  // max:'2024-04-01 00:00:00',
+                  min: minX,
+                  reverse: true,
+                  type: 'time',
+                  time: {
+                    unit: 'month',
+                  },
 
                   grid: {
                     color: "#d3d3d3",
@@ -185,18 +178,16 @@ export default function Simulate() {
           <div className="flex flex-col gap-5 p-10">
 
             <Autocomplete
+
               label="ประเภทกองทุนรวม :"
               placeholder="เลือกประเภทกองทุนรวม"
               defaultItems={risks}
               labelPlacement="outside"
               className="max-w-xs"
               onSelectionChange={handleSelectionChange}
+
             >
-              {(fundTypes || []).map((fundType) => (
-                <AutocompleteItem key={fundType.id} value={fundType.id}>
-                  {fundType.name}
-                </AutocompleteItem>
-              ))}
+              {(item: { id: any; name: any; }) => <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>}
             </Autocomplete>
 
             {showInput && <><Input
@@ -217,8 +208,7 @@ export default function Simulate() {
                 ลงทุน
               </Button></>}
 
-            {!showInput && <><NavData investment={Number(value)} startprice={startP} nowdata={Number(nowP?.["NAV PerUnit"])} buy={onBuy} nobuy={onNoBuy} /></>}
-                        {!showInput && <><NavData investment={Number(value)} startprice={startP} nowdata={Number(nowP?.["NAV PerUnit"])} buy={onBuy} nobuy={onNoBuy} status={status} /></>}
+            {!showInput && <><NavData investment={Number(value)} startprice={startP} nowdata={Number(nowP?.["NAV PerUnit"])} buy={onBuy} nobuy={onNoBuy} status={status} /></>}
 
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true} backdrop="opaque" hideCloseButton={true}>
               <ModalContent >
@@ -228,15 +218,15 @@ export default function Simulate() {
                     <ModalBody>
 
                       <p>ตัวอย่างกองทุนในประเภทกองทุนรวมตลาดเงิน </p>
-                      <p>- LHTREASURY-A</p>
-                      <p>- LHTREASURY-L</p>
-                      <p>- LHMMPVD</p>
+                      <link>- LHTREASURY-A</link>
+                      <link>- LHTREASURY-L</link>
+                      <link>- LHMMPVD</link>
                     </ModalBody>
                     <ModalFooter className=" justify-center" >
                       <Button color="default" onPress={onClose}>
                         เปลี่ยนกองทุน
                       </Button>
-                      <Button onClick={() => router.push('https://online.lhfund.co.th/')} className=" bg-[#1CA59B] text-white" onPress={onClose}>
+                      <Button className=" bg-[#1CA59B] text-white" onPress={onClose}>
                         เปิดบัญชี
                       </Button>
                     </ModalFooter>
@@ -244,23 +234,6 @@ export default function Simulate() {
                 )}
               </ModalContent>
             </Modal>
-                                            <p>ตัวอย่างกองทุนในประเภทกองทุนรวมตลาดเงิน </p>
-                                            <link>- LHTREASURY-A</link>
-                                            <link>- LHTREASURY-L</link>
-                                            <link>- LHMMPVD</link>
-                                        </ModalBody>
-                                        <ModalFooter className=" justify-center" >
-                                            <Button color="default" onPress={onClose}>
-                                                เปลี่ยนกองทุน
-                                            </Button>
-                                            <Button className=" bg-[#1CA59B] text-white" onPress={onClose}>
-                                                เปิดบัญชี
-                                            </Button>
-                                        </ModalFooter>
-                                    </>
-                                )}
-                            </ModalContent>
-                        </Modal>
 
           </div>
         </div>
@@ -269,3 +242,88 @@ export default function Simulate() {
 
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
