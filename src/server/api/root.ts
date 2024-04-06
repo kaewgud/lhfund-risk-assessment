@@ -1,4 +1,5 @@
 import { assessmentRouter } from "~/server/api/routers/assessment";
+import { portfolioRouter } from "~/server/api/routers/portfolio";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -8,6 +9,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   assessment: assessmentRouter,
+  portfolio: portfolioRouter,
 });
 
 // export type definition of API
