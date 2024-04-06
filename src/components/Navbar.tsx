@@ -91,7 +91,7 @@ export default function Navbar() {
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link href="/invest-simulator">
+              <Link href="/risk_investment">
                 <div className="flex flew-row gap-2 h-full place-items-center ">
                   <p className="text-[#1CA59B] text-wrap"  >
                     จำลองลงทุน
