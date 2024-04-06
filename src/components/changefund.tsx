@@ -3,13 +3,13 @@ import {Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, 
 
 export default function Changefund({ type,percent }:{type:string,percent:string}) {
     return(
-        <Dropdown backdrop="blur">
+        <Dropdown >
             <DropdownTrigger> 
                 <Button> {type}</Button>
             </DropdownTrigger>
             <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
             <DropdownSection title="Mutual Fund" showDivider > 
-                <DropdownItem key="fund name" > fund name {percent}% </DropdownItem>
+                <DropdownItem key="fund name" > <p className="text-lg"> fund name {percent}%</p> </DropdownItem>
             </DropdownSection>
             
             </DropdownMenu>
