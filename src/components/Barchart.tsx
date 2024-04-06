@@ -1,13 +1,25 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
+const uData = [75,125,175,75,125];
+const xLabels = [
+    'level 1',
+    'level 2',
+    'level 3',
+    'level 4',
+    'level 5',
+
+  ];
+
 export default function Barchart() {
   return (
     <BarChart
-      xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C'] }]}
-      series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
+    series={[
+        { data: uData, id: 'uvId' },
+      ]}
+      xAxis={[{ data: xLabels, scaleType: 'band' }]}
       width={500}
-      height={190}
+      height={300}
     />
   );
 }
