@@ -8,9 +8,10 @@ interface NavDataType {
     status:boolean
     buy:()=>void;
     nobuy:()=>void
+    restart:()=>void
 
 }
-export function NavData({investment, startprice,nowdata ,status,buy,nobuy}: NavDataType) {
+export function NavData({investment, startprice,nowdata ,status,buy,nobuy,restart}: NavDataType) {
     const [end,SetEnd]=React.useState(false)
     let unit = investment/startprice;
     let price = unit*nowdata;
@@ -75,7 +76,7 @@ export function NavData({investment, startprice,nowdata ,status,buy,nobuy}: NavD
     </div>
 </div>
 <div className="flex gap-3 justify-center">
-<Button radius="md" color="primary" variant="shadow" size="md" onPress={buy}>
+<Button radius="md" color="primary" variant="shadow" size="md" onPress={()=>{status? restart():buy()}}>
 {status? "เล่นอีกครั้ง":"ขายคืน"}
 </Button> 
 <Button radius="md" color="primary" variant="shadow" size="md" onPress={nobuy}>

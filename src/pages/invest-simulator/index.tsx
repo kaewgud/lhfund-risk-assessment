@@ -69,52 +69,64 @@ export default function Simulate() {
     Change: number;
     Date: string;
   }>();//ข้อมูลจุดที่กราฟหยุด
-  const [status, SetStatus] = React.useState(false)
-  const [showInput, setShowInput] = React.useState(true);//status box
-  const [minX, setMinX] = React.useState<string>('2023-10-01 00:00:00');//min graph
-  const [indexDash, setIndexDash] = React.useState(1000)
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const handleSelectionChange = (key: any) => {
+    const [status, SetStatus] = React.useState(false)//สถานะเกม
+    const [showInput, setShowInput] = React.useState(true);//status box
+    const [minX, setMinX] = React.useState<string>('2023-10-01 00:00:00');//min graph
+    const [indexDash, setIndexDash] = React.useState(1000)
+    const [selectedKey, setSelectedKey] = React.useState<React.Key | null>(null);
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const handleSelectionChange = (key: any) => {
+        setSelectedKey(key)
+        setValue("");
+        setShowInput(true)
+        setCount(1)
+        SetStatus(false)
+        setDataTest([])
+    };
 
-    setShowInput(true)
-    setCount(0)
-  };
+    const onInputChange = () => {
+        if ((Number(value) >= 0) && (value !== "") && (selectedKey !== null)) {
+            setValue(value)
+            setNowP(p1)
+            setStartP(7.013)
+            setShowInput(false)
+            setDataTest(a1.slice(0, a1.length * count / 4))
+            setCount(count + 1)
+        }
 
-  const onInputChange = () => {
-    if (Number(value) > 0 || value !== "") {
-      setValue(value)
-      setNowP(p1)
-      setStartP(7.013)
-      setShowInput(false)
+    };
+    const onBuy = () => {
+        setIndexDash(a1.length * (count - 1) / 4)
+        setDataTest(a1)
+        SetStatus(true)
+        setCount(1)
     }
 
-  };
-  const onBuy = () => {
-    setIndexDash(a1.length * (count - 1) / 4)
-    setDataTest(a1)
-    SetStatus(true)
+    const onNoBuy = () => {
+        setDataTest(a1.slice(0, a1.length * count / 4))
+        setCount(count + 1)
 
-    // setMinX('2023-12-01 00:00:00')
-  }
+        if (count === 5) {
+            SetStatus(true)
+            { onOpen() }
+        } else {
+            setDataTest(a1.slice(0, a1.length * count / 4))
+            setNowP(p2)
+        }
 
-  const onNoBuy = () => {
-    setCount(count + 1)
-    if (count === 4) {
-      onOpen()
     }
-    setDataTest(a1.slice(0, a1.length * count / 4))
-    setNowP(p2)
-  }
-
+    const onchange=()=>{
+        handleSelectionChange(null)
+    }
 
 
   return (
 
-    <div className="w-full min-h-screen justify-center flex ">
-      <div className='w-fit h-fit  flex flex-col place-items-center drop-shadow-xl bg-white mt-20'>
+        <div className="w-full min-h-screen justify-center flex bg-[#F5F5F5]">
+            <div className='w-fit h-fit  flex flex-col place-items-center drop-shadow-xl bg-white mt-20 lg:h-[500px] lg:w-[1000px]'>
         <div className='w-full bg-primary h-[50px] rounded-t-xl flex justify-center flex-col place-content-start px-5' >
           <div>
-            <p className=" text-2xl text-white ">จำลองการลงทุน</p>
+            <p className=" text-xl text-white ">จำลองการลงทุนในกองทุนรวม</p>
           </div>
         </div>
         <div className="flex flex-col gap-5 lg:flex-row h-full w-full px-5 place-items-center justify-center">
@@ -207,33 +219,31 @@ export default function Simulate() {
               onPress={onInputChange}>
                 ลงทุน
               </Button></>}
+               {!showInput && <><NavData investment={Number(value)} startprice={startP} nowdata={Number(nowP?.["NAV PerUnit"])} buy={onBuy} nobuy={onNoBuy} restart={onchange} status={status} /></>}
+               <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true} hideCloseButton={true}>
+                            <ModalContent>
+                                {(onClose) => (
+                                    <>
+                                        <ModalHeader className="flex flex-col gap-1">สิ้นสุดการจำลองการลงทุนกองทุนรวม</ModalHeader>
+                                        <ModalBody>
+                                            <p>ตัวอย่างกองทุนในประเภทกองทุนรวมตลาดเงิน </p>
+                                            <a>- LHTREASURY-A</a>
+                                            <a>- LHTREASURY-L</a>
+                                            <a>- LHMMPVD</a>
+                                        </ModalBody>
+                                        <ModalFooter className="justify-center">
+                                            <Button color="default" onPress={()=>{onchange;onClose()}}>
+                                                เปลี่ยนกองทุน
+                                            </Button>
+                                            <Button className="bg-[#1CA59B] text-white" onPress={onClose}>
+                                                เปิดบัญชี
+                                            </Button>
+                                        </ModalFooter>
+                                    </>
+                                )}
+                            </ModalContent>
+                        </Modal>
 
-            {!showInput && <><NavData investment={Number(value)} startprice={startP} nowdata={Number(nowP?.["NAV PerUnit"])} buy={onBuy} nobuy={onNoBuy} status={status} /></>}
-
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true} backdrop="opaque" hideCloseButton={true}>
-              <ModalContent >
-                {(onClose) => (
-                  <>
-                    <ModalHeader className="flex flex-col gap-1">   สิ้นสุดการจำลองการลงทุนกองทุนรวม</ModalHeader>
-                    <ModalBody>
-
-                      <p>ตัวอย่างกองทุนในประเภทกองทุนรวมตลาดเงิน </p>
-                      <link>- LHTREASURY-A</link>
-                      <link>- LHTREASURY-L</link>
-                      <link>- LHMMPVD</link>
-                    </ModalBody>
-                    <ModalFooter className=" justify-center" >
-                      <Button color="default" onPress={onClose}>
-                        เปลี่ยนกองทุน
-                      </Button>
-                      <Button className=" bg-[#1CA59B] text-white" onPress={onClose}>
-                        เปิดบัญชี
-                      </Button>
-                    </ModalFooter>
-                  </>
-                )}
-              </ModalContent>
-            </Modal>
 
           </div>
         </div>
