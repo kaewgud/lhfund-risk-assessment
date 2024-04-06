@@ -1,7 +1,6 @@
 "use client";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react"
-import Selectport from "~/components/Selectport";
 import Showchart from "~/components/Showchart";
 import Managefund from "~/components/Managefund";
 import Rank from "~/components/Rank";
@@ -17,7 +16,7 @@ export default function MainAdmin() {
 
     setShowInput(true)
     setCount(0)
-};
+  };
 
   const { data: sessionData } = useSession();
   return (
