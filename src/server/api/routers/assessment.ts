@@ -38,4 +38,59 @@ export const assessmentRouter = createTRPCRouter({
         },
       });
     }),
+
+  submitAssessment: publicProcedure
+    .input(z.object({
+      point: z.number(),
+      userId: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const riskLevel = await ctx.db.riskLevel.findMany();
+      if (!riskLevel) throw new Error("Risk Level not found")
+
+      if (input.point < 15) {
+        return ctx.db.assessment.create({
+          data: {
+            point: input.point,
+            userId: input.userId,
+            riskLevelId: riskLevel?.find((r) => r.level === 1)?.id as string,
+          },
+
+        });
+      } else if (input.point <= 21) {
+        return ctx.db.assessment.create({
+          data: {
+            point: input.point,
+            userId: input.userId,
+            riskLevelId: riskLevel?.find((r) => r.level === 2)?.id as string,
+          },
+        });
+      } else if (input.point <= 29) {
+        return ctx.db.assessment.create({
+          data: {
+            point: input.point,
+            userId: input.userId,
+            riskLevelId: riskLevel?.find((r) => r.level === 3)?.id as string,
+          },
+        });
+
+      } else if (input.point <= 36) {
+        return ctx.db.assessment.create({
+          data: {
+            point: input.point,
+            userId: input.userId,
+            riskLevelId: riskLevel?.find((r) => r.level === 4)?.id as string,
+          },
+        });
+
+      } else if (input.point >= 37) {
+        return ctx.db.assessment.create({
+          data: {
+            point: input.point,
+            userId: input.userId,
+            riskLevelId: riskLevel?.find((r) => r.level === 5)?.id as string,
+          },
+        });
+      }
+    }),
 });

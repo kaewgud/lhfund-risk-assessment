@@ -64,7 +64,7 @@ model VerificationToken {
 model Assessment {
   id          String    @id @default(cuid())
   userId      String?
-  answers     Answer[]
+  point       Int
   riskLevelId String
   riskLevel   RiskLevel @relation(fields: [riskLevelId], references: [id])
   user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -82,15 +82,6 @@ model Choice {
   point      Int
   questionId String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  Answer     Answer[]
-}
-
-model Answer {
-  id           String     @id @default(cuid())
-  choiceId     String
-  assessmentId String
-  choice       Choice     @relation(fields: [choiceId], references: [id], onDelete: Cascade)
-  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 }
 
 model FundType {
