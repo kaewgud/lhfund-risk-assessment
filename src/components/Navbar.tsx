@@ -3,6 +3,10 @@ import React from "react";
 import { Navbar as Nav,  NavbarBrand, NavbarContent, NavbarItem, Button} from "@nextui-org/react";
 import Image  from 'next/image'
 import logo  from "~/image/LHFund_logo.png"
+import  Choice  from "~/image/Choice.png"
+import  pie  from "~/image/Circle Chart.png"
+import  task from "~/image/Combo Chart.png"
+import { tr } from "date-fns/locale";
 
 export default function Navbar() {
   return (
@@ -46,45 +50,59 @@ export default function Navbar() {
         </NavbarItem>
         </NavbarContent>
   </Nav>
-    <Nav maxWidth="full" position="static" className="py-0 h-[95px] text-[#1CA59B] text-wrap drop-shadow-2xl">
+    <Nav maxWidth="full" isBordered={true} position="static" className="py-0 h-[95px] text-[#1CA59B] text-wrap drop-shadow-2xl">
     <NavbarBrand>
     <Image src={logo}  alt="Logo" />
-    <NavbarContent className="hidden md:flex gap-5 text-wrap h-[95px]" justify="end">
-        <NavbarItem>
-          <p className="text-[#1CA59B] text-wrap " >        
-            กองทุนรวม
-          </p>
-        </NavbarItem>
-        <NavbarItem>
+    <NavbarContent className="hidden md:flex gap-10 text-wrap h-full  px-28" justify="center">
+        <NavbarItem className="">
+          <div className="flex flew-row gap-2 h-full place-items-center ">
+          <span className="text-[#1CA59B] text-wrap h-full " >        
+            แบบประเมิน
+          </span>
+          <Image
+          src={Choice}
+          alt="LHFund Logo"
+          height={30}
+          // layout="fill"
+          // objectFit="cover"
+          objectPosition="center"
+          className='-z-50 '
+        />
+          </div>
+        </NavbarItem >
+        <NavbarItem >
+        <div className="flex flew-row gap-4 h-full place-items-center ">
           <p  className="text-[#1CA59B] text-wrap">
-          กองทุนส่วนบุคคล
+          ทดลองจัดพอร์ต
           </p>
+          <Image
+          src={pie}
+          alt="LHFund Logo"
+          height={30}
+          // layout="fill"
+          // objectFit="cover"
+          objectPosition="center"
+          className='-z-50 '
+        />
+          </div>
         </NavbarItem>
         <NavbarItem>
+        <div className="flex flew-row gap-2 h-full place-items-center ">
           <p className="text-[#1CA59B] text-wrap"  >
-          กองทุนสำรองเลี้ยงชีพ
+          จำลองลงทุน
           </p>
+          <Image
+          src={task}
+          alt="LHFund Logo"
+          height={30}
+          // layout="fill"
+          // objectFit="cover"
+          objectPosition="center"
+          className='-z-50 '
+        />
+          </div>
         </NavbarItem>
-        <NavbarItem>
-          <p className="text-[#1CA59B] text-wrap"  >
-          กองทุนรวมอสังหาริมทรัพย์/REIT
-          </p>
-        </NavbarItem>
-        <NavbarItem>
-          <p className="text-[#1CA59B] text-wrap"  >
-          ธุรกิจทรัสตี
-          </p>
-        </NavbarItem>
-        <NavbarItem>
-          <p className="text-[#1CA59B] text-wrap"  >
-          บริการนักลงทุน
-          </p>
-        </NavbarItem>
-        <NavbarItem>
-          <p className="text-[#1CA59B] text-wrap"  >
-          ข่าวสารและกิจกรรม
-          </p>
-        </NavbarItem>
+       
      </NavbarContent>
     </NavbarBrand>
   </Nav>
