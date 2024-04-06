@@ -205,34 +205,6 @@ export const portfolioRouter = createTRPCRouter({
       return fundTypes;
     }),
 
-  getAllRiskLevelGroupByRiskLevelNameInAssessment: publicProcedure
-    .query(async ({ ctx }) => {
-      const riskLevelGroup = await ctx.db.assessment.groupBy(
-        {
-          by: ["riskLevelId"],
-          _count: {
-            id: true,
-          },
-        },
-      );
-
-      const riskLevels = await ctx.db.riskLevel.findMany({
-        select: {
-          id: true,
-          level: true,
-        },
-      });
-
-      return riskLevelGroup.map((riskLevel) => {
-        return {
-          level: riskLevels.find((lv) => lv.id === riskLevel.riskLevelId)?.level,
-          riskLevelId: riskLevel.riskLevelId,
-          count: riskLevel._count.id,
-          percentage: (riskLevel._count.id / riskLevelGroup.length) * 100,
-        };
-      });
-    }),
-
   getAllMonthlyPriceByMutualFundInFundType: publicProcedure
     .input(z.object({
       mutualFundId: z.string(),
@@ -291,6 +263,35 @@ export const portfolioRouter = createTRPCRouter({
 
   // Todo: fix
 
+  getAllRiskLevelGroupByRiskLevelNameInAssessment: publicProcedure
+    .query(async ({ ctx }) => {
+      const riskLevels = await ctx.db.riskLevel.findMany({
+        select: {
+          level: true,
+          name: true,
+          id: true,
+        },
+      });
 
-})
+      const riskLevelAnalysis = await ctx.db.assessment.groupBy({
+        by: ["riskLevelId"],
+        _count: {
+          riskLevelId: true,
+        },
+      });
+      
+      return riskLevels.map((item) => {
+        return {
+          level: item.level,
+          riskLevelId: item.id,
+          count: riskLevelAnalysis.find((analysis) => analysis.riskLevelId === item.id)?._count.riskLevelId || 0,
+          name: item.name,
+        };
+      });
+    }),
+});
+
+
+
+
 

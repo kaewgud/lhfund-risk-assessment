@@ -11,13 +11,18 @@ const xLabels = [
 
   ];
 
-export default function Barchart() {
+export default function Barchart({barChartData}: any) {
+
+  const nameList = barChartData?.map(({ name }: any) => name);
+  const levelList = barChartData?.map(({ level }: any) => level);
+  const countList = barChartData?.map(({ count }: any) => count);
+
   return (
     <BarChart
     series={[
-        { data: uData, id: 'uvId' },
+        { data: countList, id: 'uvId' },
       ]}
-      xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      xAxis={[{ data: levelList, scaleType: 'band' }]}
       width={500}
       height={300}
     />
