@@ -7,7 +7,7 @@ import logo from "~/image/banner_risk.jpg"
 
 export default function Risk_assessment() {
   return (
-    <div className="bg-cover bg-center h-screen flex items-center justify-center relative flex-col  place-items-center">
+    <div className="bg-cover bg-center h-screen flex items-center pt-[185px] relative flex-col  place-items-center">
       <div>
         <Image
           src={logo}
