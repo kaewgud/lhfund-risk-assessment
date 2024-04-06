@@ -21,7 +21,7 @@ index:number)=>{
         ,
         datasets: [
             {
-                // label:"Nav per Unit",
+                label:"Nav per Unit",
                 data: dataJS.map((data) => data["NAV PerUnit"]),
                 borderColor:"rgb(75, 192, 192)",
                 tension: 0.1,
