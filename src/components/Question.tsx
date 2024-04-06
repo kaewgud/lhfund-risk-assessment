@@ -3,6 +3,7 @@ import { Progress } from "@nextui-org/react";
 import { Pagination, Button } from "@nextui-org/react";
 import { RadioGroup, useRadio, VisuallyHidden, cn } from "@nextui-org/react";
 import { api } from "~/utils/api"
+import { useRouter } from 'next/router';
 
 interface CustomRadioProps {
   value: string;
@@ -53,13 +54,16 @@ export const CustomRadio = ({ value, children, questionId, choiceId, selectedAns
 
 
 export default function Question() {
+  const router = useRouter();
 
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedAnswers, setSelectedAnswers] = React.useState<{ [questionId: string]: string }>({});
 
-
   const { data: questions } = api.assessment.getAllQuestion.useQuery();
   const { data: choices } = api.assessment.getAllChoice.useQuery();
+  const { data: riskLevel } = api.portfolio.getAllRiskLevel.useQuery();
+
+  const submit = api.assessment.submitAssessment.useMutation();
 
   const questionList = questions?.map((question: any) => {
     const choiceList = choices?.filter((choice: any) => choice.questionId === question.id);
@@ -74,6 +78,21 @@ export default function Question() {
   const handleRadioSelect = (questionId: string, choiceId: string) => {
     setSelectedAnswers((prevAnswers) => ({ ...prevAnswers, [questionId]: choiceId }));
   };
+
+  const handleSubmit = async () => {
+    const sum_score: number = Object.values(selectedAnswers).reduce((acc, answer) => {
+      const choice = choices?.find((choice: any) => choice.id === answer);
+      return acc + choice?.point!;
+    }
+      , 0);
+
+    try {
+      await submit.mutateAsync({ point: sum_score })
+      router.push('persona?score=' + sum_score)
+    } catch (error) {
+      alert('Something went wrong 😰')
+    }
+  }
 
   return (
     <div className='flex justify-center flex-col place-items-center'>
@@ -139,7 +158,7 @@ export default function Question() {
                 size="md"
                 variant="flat"
                 color="primary"
-              // onPress={() => setCurrentPage((prev) => prev + 1)}
+                onPress={() => handleSubmit()}
               >
                 ส่งแบบประเมินความเสี่ยง
               </Button>

@@ -7,7 +7,10 @@ import banner_pic from "~/image/banner_port.png";
 import Image from "next/image";
 
 export default function recommend() {
-  const score = 40;
+  const router = useRouter();
+  const { userScore } = router.query;
+
+  const score = parseInt(userScore as string) || 0;
   let text: string | null = null;
   let level: number | null = null;
   text = "";
@@ -67,6 +70,7 @@ export default function recommend() {
             variant="shadow"
             size="lg"
             className="text-lg"
+            onClick={() => router.push('/organize')}
           >
             ทดลองจัดพอร์ต
           </Button>
