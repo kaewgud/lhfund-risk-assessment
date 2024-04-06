@@ -18,8 +18,12 @@ export default function Changefund({ typeId, type, percent, riskLevel }: { typeI
       </DropdownTrigger>
       <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
         <DropdownSection title="Mutual Fund" showDivider>
-          {Ratio?.filter((item: any) => item.riskLevelId == riskLevelId).map((item: any) => (
-            <DropdownItem key={item.id} > <p className="text-lg">{fundWithTypeId?.find((item2: any) => item2.id == item.mutualFundId)?.name}  {item.percentage}%</p> </DropdownItem>
+          {(Ratio?.filter((item: any) => item.riskLevelId === riskLevelId) || []).map((item: any) => (
+            <DropdownItem key={item.id}>
+              <p className="text-lg">
+                {fundWithTypeId?.find((item2: any) => item2.id === item.mutualFundId)?.name} {item.percentage}%
+              </p>
+            </DropdownItem>
           ))}
         </DropdownSection>
 

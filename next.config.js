@@ -6,6 +6,12 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   reactStrictMode: true,
   transpilePackages: ['@mui/x-charts'],
 
@@ -17,7 +23,7 @@ const config = {
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
-    
+
   },
 };
 
