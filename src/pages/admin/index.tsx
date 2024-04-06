@@ -52,7 +52,7 @@ export default function MainAdmin() {
               onSelectionChange={handleSelectionChange}
 
             >
-              {(riskLevel || []).map((item) => (
+              {(riskLevel || []).map((item: any) => (
                 <AutocompleteItem key={item.level} value={item.level}>
                   {item.name}
                 </AutocompleteItem>
