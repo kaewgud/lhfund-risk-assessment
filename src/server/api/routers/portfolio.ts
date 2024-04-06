@@ -277,6 +277,18 @@ export const portfolioRouter = createTRPCRouter({
       });
     }),
 
+  getRepresentMapByFundType: publicProcedure
+    .input(z.object({ fundTypeId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const representMap = await ctx.db.representMap.findFirst({
+        where: {
+          fundTypeId: input.fundTypeId,
+        },
+      });
+
+      return representMap;
+    }),
+
   // Todo: fix
 
 
