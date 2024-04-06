@@ -10,74 +10,79 @@ import { risks } from "~/data-mockup/risk"
 import { a1 } from "~/data-mockup/simulate"
 import { Line } from "react-chartjs-2";
 
+import { useRouter } from 'next/router';
+
+import { api } from '~/utils/api'
+
 ChartJS.register(
-    TimeScale,
-    LineElement,
-    LinearScale,
-    PointElement,
-    Tooltip,
-    Legend,
-    TimeSeriesScale
+  TimeScale,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+  TimeSeriesScale
 );
 
 const p1 = {
-    "Fundcode": "LHEME-E",
-    "NAV PerUnit": 6.7838,
-    "Total NAV": 3351965.82,
-    "Subscription": 6.7839,
-    "Redemption": 6.7838,
-    "Change": 0.0051,
-    "Date": "30/11/2023"
+  "Fundcode": "LHEME-E",
+  "NAV PerUnit": 6.7838,
+  "Total NAV": 3351965.82,
+  "Subscription": 6.7839,
+  "Redemption": 6.7838,
+  "Change": 0.0051,
+  "Date": "30/11/2023"
 }
 
 const p2 = {
-    "Fundcode": "LHEME-E",
-    "NAV PerUnit": 7.7838,
-    "Total NAV": 3351965.82,
-    "Subscription": 6.7839,
-    "Redemption": 6.7838,
-    "Change": 0.0051,
-    "Date": "30/11/2023"
+  "Fundcode": "LHEME-E",
+  "NAV PerUnit": 7.7838,
+  "Total NAV": 3351965.82,
+  "Subscription": 6.7839,
+  "Redemption": 6.7838,
+  "Change": 0.0051,
+  "Date": "30/11/2023"
 }
 const q: string[] = ['2024-02-01 00:00:00', '2024-01-01 00:00:00', '2023-12-01 00:00:00', '2023-11-01 00:00:00']
 
 
 export default function Simulate() {
-    const [box, setBox] = React.useState<React.JSX.Element>(<></>);
-    const totalDuration = 3000;
-    const delayBetweenPoints = 50;
-    const previousY = (ctx: any) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
-    const [dataTest, setDataTest] = useState<{
-        Fundcode: string;
-        "NAV PerUnit": number;
-        "Total NAV": number;
-        Subscription: number;
-        Redemption: number;
-        Change: number;
-        Date: string;
-    }[]>([]);
-    const [count, setCount] = React.useState(0);
-    const [value, setValue] = React.useState("");//เงินลงทุน
-    const [startP, setStartP] = React.useState(0);//ข้อมูลแรก
-    const [nowP, setNowP] = React.useState<{
-        Fundcode: string;
-        "NAV PerUnit": number;
-        "Total NAV": number;
-        Subscription: number;
-        Redemption: number;
-        Change: number;
-        Date: string;
-    }>();//ข้อมูลจุดที่กราฟหยุด
+  const router = useRouter();
+  const [box, setBox] = React.useState<React.JSX.Element>(<></>);
+  const totalDuration = 3000;
+  const delayBetweenPoints = 50;
+  const previousY = (ctx: any) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+  const [dataTest, setDataTest] = useState<{
+    Fundcode: string;
+    "NAV PerUnit": number;
+    "Total NAV": number;
+    Subscription: number;
+    Redemption: number;
+    Change: number;
+    Date: string;
+  }[]>([]);
+  const [count, setCount] = React.useState(0);
+  const [value, setValue] = React.useState("");//เงินลงทุน
+  const [startP, setStartP] = React.useState(0);//ข้อมูลแรก
+  const [nowP, setNowP] = React.useState<{
+    Fundcode: string;
+    "NAV PerUnit": number;
+    "Total NAV": number;
+    Subscription: number;
+    Redemption: number;
+    Change: number;
+    Date: string;
+  }>();//ข้อมูลจุดที่กราฟหยุด
     const [status,SetStatus]=React.useState(false)
-    const [showInput, setShowInput] = React.useState(true);//status box
-    const [minX, setMinX] = React.useState<string>('2023-10-01 00:00:00');//min graph
-    const [indexDash, setIndexDash] = React.useState(1000)
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const handleSelectionChange = (key: any) => {
+  const [showInput, setShowInput] = React.useState(true);//status box
+  const [minX, setMinX] = React.useState<string>('2023-10-01 00:00:00');//min graph
+  const [indexDash, setIndexDash] = React.useState(1000)
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const handleSelectionChange = (key: any) => {
 
-        setShowInput(true)
-        setCount(0)
-    };
+    setShowInput(true)
+    setCount(0)
+  };
 
     const onInputChange = () => {
         if (Number(value) > 0 || value !== "") {
@@ -93,21 +98,24 @@ export default function Simulate() {
         setDataTest(a1)
         SetStatus(true)
 
-        // setMinX('2023-12-01 00:00:00')
+    // setMinX('2023-12-01 00:00:00')
+  }
+
+  const onNoBuy = () => {
+    setCount(count + 1)
+    if (count === 4) {
+      onOpen()
     }
-
-    const onNoBuy = () => {
-        setCount(count + 1)
-        if (count === 4) {
-            onOpen()
-        }
-        setDataTest(a1.slice(0, a1.length * count / 4))
-        setNowP(p2)
-    }
+    setDataTest(a1.slice(0, a1.length * count / 4))
+    setNowP(p2)
+  }
 
 
+  const { data: mutualFunds } = api.portfolio.getAllMutualFund.useQuery();
 
-    return (
+  const { data: fundTypes } = api.portfolio.getAllFundType.useQuery();
+
+  return (
 
         <div className="w-full min-h-screen justify-center flex ">
             <div className='w-fit h-fit  flex flex-col place-items-center drop-shadow-xl bg-white mt-20'>
@@ -162,60 +170,80 @@ export default function Simulate() {
                                         unit: 'month',
                                     },
 
-                                    grid: {
-                                        color: "#d3d3d3",
-                                    },
-                                },
-                                y: {
-                                    beginAtZero: false,
-                                    min: 6,
-                                    max: 7.5
-                                }
-                            },
-                        }} />
-                    </div>
-                    <div className="flex flex-col gap-5 p-10">
+                  grid: {
+                    color: "#d3d3d3",
+                  },
+                },
+                y: {
+                  beginAtZero: false,
+                  min: 6,
+                  max: 7.5
+                }
+              },
+            }} />
+          </div>
+          <div className="flex flex-col gap-5 p-10">
 
-                        <Autocomplete
+            <Autocomplete
+              label="ประเภทกองทุนรวม :"
+              placeholder="เลือกประเภทกองทุนรวม"
+              defaultItems={risks}
+              labelPlacement="outside"
+              className="max-w-xs"
+              onSelectionChange={handleSelectionChange}
+            >
+              {(fundTypes || []).map((fundType) => (
+                <AutocompleteItem key={fundType.id} value={fundType.id}>
+                  {fundType.name}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
 
-                            label="ประเภทกองทุนรวม :"
-                            placeholder="เลือกประเภทกองทุนรวม"
-                            defaultItems={risks}
-                            labelPlacement="outside"
-                            className="max-w-xs"
-                            onSelectionChange={handleSelectionChange}
+            {showInput && <><Input
+              type="number"
+              label="จำนวนเงินลงทุน (บาท ) : "
+              placeholder="0.00"
+              labelPlacement="outside"
+              value={value}
+              onValueChange={setValue}
+              className="max-w-xs"
+              startContent={
+                <div className="pointer-events-none flex items-center">
+                  <span className="text-default-400 text-small">฿</span>
+                </div>
+              }
+            /> <Button type="submit" radius="md" color="primary" variant="shadow" size="md"
+              onPress={onInputChange}>
+                ลงทุน
+              </Button></>}
 
-                        >
-                            {(item: { id: any; name: any; }) => <AutocompleteItem key={item.id}>{item.name}</AutocompleteItem>}
-                        </Autocomplete>
-
-                        {showInput && <><Input
-                            type="number"
-                            label="จำนวนเงินลงทุน (บาท ) : "
-                            placeholder="0.00"
-                            labelPlacement="outside"
-                            value={value}
-                            onValueChange={setValue}
-                            className="max-w-xs"
-                            startContent={
-                                <div className="pointer-events-none flex items-center">
-                                    <span className="text-default-400 text-small">฿</span>
-                                </div>
-                            }
-                        /> <Button type="submit" radius="md" color="primary" variant="shadow" size="md"
-                            onPress={onInputChange}>
-                                ลงทุน
-                            </Button></>}
-
+            {!showInput && <><NavData investment={Number(value)} startprice={startP} nowdata={Number(nowP?.["NAV PerUnit"])} buy={onBuy} nobuy={onNoBuy} /></>}
                         {!showInput && <><NavData investment={Number(value)} startprice={startP} nowdata={Number(nowP?.["NAV PerUnit"])} buy={onBuy} nobuy={onNoBuy} status={status} /></>}
 
-                        <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true} backdrop="opaque" hideCloseButton={true}>
-                            <ModalContent >
-                                {(onClose) => (
-                                    <>
-                                        <ModalHeader className="flex flex-col gap-1">   สิ้นสุดการจำลองการลงทุนกองทุนรวม</ModalHeader>
-                                        <ModalBody>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true} backdrop="opaque" hideCloseButton={true}>
+              <ModalContent >
+                {(onClose) => (
+                  <>
+                    <ModalHeader className="flex flex-col gap-1">   สิ้นสุดการจำลองการลงทุนกองทุนรวม</ModalHeader>
+                    <ModalBody>
 
+                      <p>ตัวอย่างกองทุนในประเภทกองทุนรวมตลาดเงิน </p>
+                      <p>- LHTREASURY-A</p>
+                      <p>- LHTREASURY-L</p>
+                      <p>- LHMMPVD</p>
+                    </ModalBody>
+                    <ModalFooter className=" justify-center" >
+                      <Button color="default" onPress={onClose}>
+                        เปลี่ยนกองทุน
+                      </Button>
+                      <Button onClick={() => router.push('https://online.lhfund.co.th/')} className=" bg-[#1CA59B] text-white" onPress={onClose}>
+                        เปิดบัญชี
+                      </Button>
+                    </ModalFooter>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
                                             <p>ตัวอย่างกองทุนในประเภทกองทุนรวมตลาดเงิน </p>
                                             <link>- LHTREASURY-A</link>
                                             <link>- LHTREASURY-L</link>
@@ -234,10 +262,10 @@ export default function Simulate() {
                             </ModalContent>
                         </Modal>
 
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
+    </div>
 
-    )
+  )
 }
