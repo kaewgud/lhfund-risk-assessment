@@ -1,15 +1,17 @@
 import { Button, useDisclosure } from "@nextui-org/react"
+import React from "react";
 
 interface NavDataType {
     investment:number;
     startprice: number;
     nowdata: number;
+    status:boolean
     buy:()=>void;
     nobuy:()=>void
 
 }
-export function NavData({investment, startprice,nowdata ,buy,nobuy}: NavDataType) {
-    
+export function NavData({investment, startprice,nowdata ,status,buy,nobuy}: NavDataType) {
+    const [end,SetEnd]=React.useState(false)
     let unit = investment/startprice;
     let price = unit*nowdata;
     let diffprice = investment-price;
@@ -74,10 +76,10 @@ export function NavData({investment, startprice,nowdata ,buy,nobuy}: NavDataType
 </div>
 <div className="flex gap-3 justify-center">
 <Button radius="md" color="primary" variant="shadow" size="md" onPress={buy}>
-ขายคืน
+{status? "เล่นอีกครั้ง":"ขายคืน"}
 </Button> 
 <Button radius="md" color="primary" variant="shadow" size="md" onPress={nobuy}>
-คงเงินลงทุนไว้
+{status? "เปิดบัญชี":"คงเงินลงทุนไว้"}
 </Button> 
 </div>
 </> )

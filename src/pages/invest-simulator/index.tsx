@@ -68,8 +68,9 @@ export default function Simulate() {
         Change: number;
         Date: string;
     }>();//ข้อมูลจุดที่กราฟหยุด
+    const [status,SetStatus]=React.useState(false)
     const [showInput, setShowInput] = React.useState(true);//status box
-    const [minX, setMinX] = React.useState<string>('2022-04-01 00:00:00');//min graph
+    const [minX, setMinX] = React.useState<string>('2023-10-01 00:00:00');//min graph
     const [indexDash, setIndexDash] = React.useState(1000)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const handleSelectionChange = (key: any) => {
@@ -90,7 +91,7 @@ export default function Simulate() {
     const onBuy = () => {
         setIndexDash(a1.length * (count - 1) / 4)
         setDataTest(a1)
-        onOpen()
+        SetStatus(true)
 
         // setMinX('2023-12-01 00:00:00')
     }
@@ -206,7 +207,7 @@ export default function Simulate() {
                                 ลงทุน
                             </Button></>}
 
-                        {!showInput && <><NavData investment={Number(value)} startprice={startP} nowdata={Number(nowP?.["NAV PerUnit"])} buy={onBuy} nobuy={onNoBuy} /></>}
+                        {!showInput && <><NavData investment={Number(value)} startprice={startP} nowdata={Number(nowP?.["NAV PerUnit"])} buy={onBuy} nobuy={onNoBuy} status={status} /></>}
 
                         <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true} backdrop="opaque" hideCloseButton={true}>
                             <ModalContent >
@@ -216,9 +217,9 @@ export default function Simulate() {
                                         <ModalBody>
 
                                             <p>ตัวอย่างกองทุนในประเภทกองทุนรวมตลาดเงิน </p>
-                                            <p>- LHTREASURY-A</p>
-                                            <p>- LHTREASURY-L</p>
-                                            <p>- LHMMPVD</p>
+                                            <link>- LHTREASURY-A</link>
+                                            <link>- LHTREASURY-L</link>
+                                            <link>- LHMMPVD</link>
                                         </ModalBody>
                                         <ModalFooter className=" justify-center" >
                                             <Button color="default" onPress={onClose}>

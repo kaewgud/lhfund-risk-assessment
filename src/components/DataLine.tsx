@@ -15,24 +15,26 @@ index:number)=>{
         return dateObject
     
     })
-    const dash = (ctx:any ,value:number[])=>ctx.p0DataIndex>index ? value:[120,0];
+    const dash = (ctx:any ,value:number[]|string)=>ctx.p0DataIndex>index ? value:[dataJS.length,0];
     const lineChartData = {
         labels:labelX
         ,
         datasets: [
             {
-                label:"Nav per Unit",
+                // label:"Nav per Unit",
                 data: dataJS.map((data) => data["NAV PerUnit"]),
-                borderColor: "rgb(75, 192, 192)",
+                borderColor:"rgb(75, 192, 192)",
                 tension: 0.1,
                 segment:{
-                    borderDash:(ctx:any)=>dash(ctx,[4,2])||[120,0]
+                    borderDash:(ctx:any)=>dash(ctx,[3,2])||[dataJS.length,0],
+
+
                 },
                 pointRadius: (ctx: any) => {
                     const pointlen = ctx.chart.data.labels.length - 1;
                     const pointArray = [];
                     for (let i = 0; i <= pointlen; i++) {
-                        if (i === pointlen) {
+                        if (i === pointlen || i === index) {
                             pointArray.push(7)
                         } else {
                             pointArray.push(0)
