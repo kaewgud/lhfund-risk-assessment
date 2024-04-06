@@ -7,7 +7,7 @@ import banner_pic from "~/image/banner_port.png"
 import Image from "next/image";
 
 export default function recommend() {
-    const score = 38;
+    const score = 40;
     let text: string | null = null; 
     let level: number | null = null;
     text = "";
@@ -18,11 +18,11 @@ export default function recommend() {
         text = "นักลงทุนที่รับความเสี่ยงได้ต่ำ";
     }else if (score <= 21){
         level = 2;
-        text = "นักลงทุนที่รับความเสี่ยงได้ปานกลางค่อยข้างต่ำ";
+        text = "นักลงทุนที่รับความเสี่ยงได้ปานกลางค่อนข้างต่ำ";
     }
     else if (score <= 29){
         level = 3;
-        text = "นักลงทุนที่รับความเสี่ยงได้ปานกลางค่อยข้างสูง";
+        text = "นักลงทุนที่รับความเสี่ยงได้ปานกลางค่อนข้างสูง";
     }
     else if (score <= 36){
         level = 4;
@@ -61,7 +61,10 @@ export default function recommend() {
                     </div>
                 ))}
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center gap-8">
+                    <Button radius="md" color="primary" variant="shadow" size="lg" className='text-lg'>
+                        จัดซื้อกองทุนที่แนะนำทั้งหมด
+                    </Button> 
                     <Button radius="md" color="primary" variant="shadow" size="lg" className='text-lg'>
                         ทดลองจัดพอร์ต
                     </Button> 
