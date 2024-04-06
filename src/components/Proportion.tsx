@@ -1,41 +1,32 @@
 import * as React from 'react';
 import Port from "./Port";
 
-export default function Proportion({ score , text}:{text: string; score: number}) {
-    let level: number | null = null;
+export default function Proportion({ level , text}:{text: string; level: number}) {
     let fund_level1: string | null = null;
     let fund_level2: string | null = null;
     let fund_level3: string | null = null;
     let fund_level4: string | null = null;
-    
-    level = 0;
 
-    if (score < 15) {
-        level = 1;
-    }else if (score <= 21){
-        level = 2;
+    if (level === 2){
         fund_level1="น้อยกว่า 20%";
         fund_level2="น้อยกว่า 70%";
         fund_level3="น้อยกว่า 20%";
         fund_level4="น้อยกว่า 10%";
 
     }
-    else if (score <= 29){
-        level = 3;
+    else if (level === 3){
         fund_level1="น้อยกว่า 10%";
         fund_level2="น้อยกว่า 60%";
         fund_level3="น้อยกว่า 30%";
         fund_level4="น้อยกว่า 10%";
     }
-    else if (score <= 36){
-        level = 4;
+    else if (level === 4){
         fund_level1="น้อยกว่า 10%";
         fund_level2="น้อยกว่า 40%";
         fund_level3="น้อยกว่า 40%";
         fund_level4="น้อยกว่า 20%";
     }
-    else if (score >= 37){
-        level = 5;
+    else if (level === 5){
         fund_level1="น้อยกว่า 5%";
         fund_level2="น้อยกว่า 30%";
         fund_level3="มากกว่า 60%";
@@ -65,7 +56,7 @@ export default function Proportion({ score , text}:{text: string; score: number}
                     </div>
                 </div>
                 <div className='flex py-10 font-semibold text-lg text-white'>
-                    { score < 15 ? (
+                    { level === 1 ? (
                         <>
                         <div className='px-[235px] py-7 bg-gradient-to-r from-[#327061] to-[#5FB9A0]'>
                         <p>มากกว่า 60%</p>
