@@ -62,10 +62,12 @@ model VerificationToken {
 }
 
 model Assessment {
-  id      String   @id @default(cuid())
-  userId  String?
-  answers Answer[]
-  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  userId      String?
+  answers     Answer[]
+  riskLevelId String
+  riskLevel   RiskLevel @relation(fields: [riskLevelId], references: [id])
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Question {
@@ -92,17 +94,55 @@ model Answer {
 }
 
 model FundType {
-  id          String  @id @default(cuid())
-  name        String
-  description String?
-  funds       Fund[]
+  id           String         @id @default(cuid())
+  name         String
+  description  String?
+  mutualFunds  MutualFund[]
+  RepresentMap RepresentMap[]
 }
 
-model Fund {
-  id          String   @id @default(cuid())
+model MonthlyPrice {
+  id            String     @id @default(cuid())
+  dateTimestamp DateTime
+  cost          Float
+  mutualFund    MutualFund @relation(fields: [mutualFundId], references: [id])
+  mutualFundId  String
+}
+
+model MutualFund {
+  id           String         @id @default(cuid())
+  name         String
+  description  String?
+  fundTypeId   String
+  fundType     FundType       @relation(fields: [fundTypeId], references: [id])
+  Ratio        Ratio[]
+  MonthlyPrice MonthlyPrice[]
+  RepresentMap RepresentMap[]
+}
+
+model RiskLevel {
+  id          String       @id @default(cuid())
   name        String
   description String?
-  riskLevel   Int
-  fundTypeId  String
-  fundType    FundType @relation(fields: [fundTypeId], references: [id])
+  level       Int
+  ratios      Ratio[]
+  Assessment  Assessment[]
+}
+
+model Ratio {
+  id           String     @id @default(cuid())
+  name         String
+  riskLevel    RiskLevel  @relation(fields: [riskLevelId], references: [id])
+  riskLevelId  String
+  percentage   Int
+  mutualFundId String
+  mutualFund   MutualFund @relation(fields: [mutualFundId], references: [id])
+}
+
+model RepresentMap {
+  id           String     @id @default(cuid())
+  fundTypeId   String
+  fundType     FundType   @relation(fields: [fundTypeId], references: [id])
+  mutualFundId String
+  mutualFund   MutualFund @relation(fields: [mutualFundId], references: [id])
 }
