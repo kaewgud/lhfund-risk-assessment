@@ -947,10 +947,10 @@ export const a1 =[
   },
   {
     "Fundcode": "LHEME-E",
-    "NAV PerUnit": 6.4137,
+    "NAV PerUnit": 6.7537,
     "Total NAV": 3168123.48,
     "Subscription": 6.4138,
-    "Redemption": 6.4137,
+    "Redemption": 7.7437,
     "Change": 0.0513,
     "Date": "27/10/2023"
   },
