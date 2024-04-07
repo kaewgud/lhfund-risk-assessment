@@ -15,10 +15,10 @@ export function NavData({ investment, startprice, nowdata, status, buy, nobuy, r
   const [end, SetEnd] = React.useState(false)
   let unit = investment / startprice;
   let price = unit * nowdata;
-  let diffprice = investment - price;
+  let diffprice = (price - investment);
   let diffper = diffprice * 100 / investment;
   let diff, per;
-  if (diffprice < 0) {
+  if (diffprice > 0) {
     diff = '+' + diffprice.toFixed(2)
     per = '⭡' + diffper.toFixed(2) + '% )'
   } else {

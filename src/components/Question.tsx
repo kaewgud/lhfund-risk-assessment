@@ -4,6 +4,9 @@ import { Pagination, Button } from "@nextui-org/react";
 import { RadioGroup, useRadio, VisuallyHidden, cn } from "@nextui-org/react";
 import { api } from "~/utils/api"
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+
+import question6 from "~/image/question6.png";
 
 interface CustomRadioProps {
   value: string;
@@ -114,6 +117,13 @@ export default function Question() {
           <div>
             <h1 className='text-xl py-6 font-bold'>{currentPage}. {questionList[currentPage - 1].text}</h1>
           </div>
+          {(currentPage) === 6 ? (
+            <div className="flex justify-center items-center">
+              <Image src={question6} className="mb-6" alt='Question 6' width={500} height={500} />
+            </div>
+
+          ) : null
+          }
           <div>
             <p className="text-small text-[#1CA59B]">ข้อที่ {currentPage} จาก 10 ข้อ</p>
           </div>
