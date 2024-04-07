@@ -8,7 +8,7 @@ import { NavData } from '~/components/NavData'
 import 'chartjs-adapter-date-fns';
 import { enUS, tr } from 'date-fns/locale';
 import { risks } from "~/data-mockup/risk"
-import { a1 } from "~/data-mockup/simulate"
+import { a1 as test } from "~/data-mockup/simulate"
 import { Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -21,27 +21,15 @@ ChartJS.register(
   TimeSeriesScale
 );
 
-const p1 = {
-  "Fundcode": "LHEME-E",
-  "NAV PerUnit": 6.7838,
-  "Total NAV": 3351965.82,
-  "Subscription": 6.7839,
-  "Redemption": 6.7838,
-  "Change": 0.0051,
-  "Date": "30/11/2023"
-}
-
-const p2 = {
-  "Fundcode": "LHEME-E",
-  "NAV PerUnit": 7.7838,
-  "Total NAV": 3351965.82,
-  "Subscription": 6.7839,
-  "Redemption": 6.7838,
-  "Change": 0.0051,
-  "Date": "30/11/2023"
-}
-const q: string[] = ['2024-02-01 00:00:00', '2024-01-01 00:00:00', '2023-12-01 00:00:00', '2023-11-01 00:00:00']
-
+const a1:{
+  Fundcode: string;
+  "NAV PerUnit": number;
+  "Total NAV": number;
+  Subscription: number;
+  Redemption: number;
+  Change: number;
+  Date: string;
+}[] = test.reverse();
 
 export default function Simulate() {
   const [box, setBox] = React.useState<React.JSX.Element>(<></>);
@@ -82,13 +70,14 @@ export default function Simulate() {
         setCount(1)
         SetStatus(false)
         setDataTest([])
+        setIndexDash(1000)
     };
 
     const onInputChange = () => {
         if ((Number(value) >= 0) && (value !== "") && (selectedKey !== null)) {
             setValue(value)
-            setNowP(p1)
-            setStartP(7.013)
+            setNowP(a1[Math.floor(((a1.length * count )/ 4))])
+            setStartP(Number(a1[0]?.["NAV PerUnit"]))
             setShowInput(false)
             setDataTest(a1.slice(0, a1.length * count / 4))
             setCount(count + 1)
@@ -111,7 +100,7 @@ export default function Simulate() {
             { onOpen() }
         } else {
             setDataTest(a1.slice(0, a1.length * count / 4))
-            setNowP(p2)
+            setNowP(a1[Math.floor(((a1.length * count )/ 4))-1])
         }
 
     }
@@ -167,9 +156,11 @@ export default function Simulate() {
               scales: {
                 x: {
                   // min:1471174953000,
-                  // max:'2024-04-01 00:00:00',
-                  min: minX,
-                  reverse: true,
+                  max:()=>{const parts = a1[a1.length-1].Date.split('/');
+                  const dateObject = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+                  return dateObject},
+                  // min: minX,
+                  // reverse: true,
                   type: 'time',
                   time: {
                     unit: 'month',
@@ -243,8 +234,6 @@ export default function Simulate() {
                                 )}
                             </ModalContent>
                         </Modal>
-
-
           </div>
         </div>
       </div>
