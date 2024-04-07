@@ -9,9 +9,9 @@ import Resultscard from "~/components/Portresultscard";
 
 export default function organize() {
   const router = useRouter();
-  const lowRisk_reward = 3.14;
-  const mediumRisk_reward = 8.96;
-  const highRisk_reward = 12.71;
+  const lowRisk_reward = 1.65;
+  const mediumRisk_reward = 5.12;
+  const highRisk_reward = 6.96;
 
   const [lowRiskPercent, setLowRiskPercent] = useState(40);
   const [mediumRiskPercent, setMediumRiskPercent] = useState(40);
